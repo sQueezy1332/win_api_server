@@ -15,10 +15,34 @@
 #pragma comment(lib, "netapi32.lib")
 
 #define SERVER_IP "127.0.0.1"
-#define SERVER_PORT 5000
+#define SERVER_PORT 8080
 #define HEARTBEAT_INTERVAL 60000 // 1 minute
 
-SOCKET clientSocket = INVALID_SOCKET;
+class SmartSocket {
+public:
+	SmartSocket() {};
+	SmartSocket(SOCKET socket) : handle(socket) {}
+	~SmartSocket() {
+		closesocket(handle);
+		WSACleanup();
+	}
+	operator SmartSocket() { return handle; }
+	operator SOCKET() { return handle; }
+	operator bool() { return handle != INVALID_SOCKET; }
+	SmartSocket& operator =(const SOCKET& socket) {
+		handle = socket;
+		return *this;
+	}
+	SmartSocket& operator =(SmartSocket& socket) {
+		handle = socket.handle;
+		socket.handle = INVALID_SOCKET;
+		return *this;
+	}
+private:
+	SOCKET handle = INVALID_SOCKET;
+};
+
+SmartSocket clientSocket;
 char computerName[MAX_COMPUTERNAME_LENGTH + 1];
 char userName[UNLEN];
 char machineInfo[128];
