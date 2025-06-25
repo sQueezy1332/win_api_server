@@ -14,7 +14,7 @@
 #pragma comment(lib, "netapi32.lib")
 
 #define SERVER_IP "127.0.0.1"
-#define SERVER_PORT 8080
+#define SERVER_PORT 5000
 #define HEARTBEAT_INTERVAL 60000 // 1 minute
 
 // Global vars
