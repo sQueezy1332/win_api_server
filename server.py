@@ -7,6 +7,10 @@ import base64
 import os
 
 app = Flask(__name__)
+SERVER_HOST = '127.0.0.1'  # Localhost
+SERVER_PORT = 8080         # Port number
+WEBMORDA_HOST = SERVER_HOST
+WEBMORDA_PORT = 5000
 
 # In-memory storage for clients (in production, use a database)
 clients = {}
@@ -14,11 +18,11 @@ screenshots = {}
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 8080))
+    #server_socket.bind(('0.0.0.0', 8080))
+    server_socket.bind((SERVER_HOST, SERVER_PORT))
     server_socket.listen(5)
     
-    print("Server listening on port 8080...")
-    
+    print(f"Server running on http://{HOST}:{PORT}")
     while True:
         client_socket, addr = server_socket.accept()
         threading.Thread(target=handle_client, args=(client_socket, addr)).start()
@@ -39,7 +43,7 @@ def handle_client(client_socket, addr):
     
     try:
         while True:
-            data = client_socket.recv(64).decode()
+            data = client_socket.recv(1024).decode()
             if not data:
                 break
                 
@@ -86,7 +90,8 @@ def get_screenshots(ip):
 
 if __name__ == '__main__':
     # Start TCP server in a separate thread
+    print("Server running on http://{HOST}:{PORT}")
     threading.Thread(target=start_server, daemon=True).start()
     
     # Start web interface
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host=SERVER_HOST, port=5000)
