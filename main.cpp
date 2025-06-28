@@ -53,7 +53,7 @@ int getMachineInformation() {
 	if ((ret = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR) {
 		while (pAdapter = pAdapterInfo) {
 			if (pAdapter->IpAddressList.IpAddress.String[0] != '0') {
-				sprintf(machineInfo, "Computer: %s | User: %s | IP: %s",
+				sprintf(machineInfo, "PC: %s | User: %s | IP: %s",
 					computerName, userName, pAdapter->IpAddressList.IpAddress.String);
 				break;
 			}
