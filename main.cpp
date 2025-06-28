@@ -35,12 +35,15 @@ int connectToServer() {
 }
 
 int getMachineInformation() {
+	char computerName[MAX_COMPUTERNAME_LENGTH + 1];
+	char userName[MAX_COMPUTERNAME_LENGTH + 1];
+	//char domainName[MAX_COMPUTERNAME_LENGTH + 1];
 	ULONG ulOutBufLen = sizeof(IP_ADAPTER_INFO);
 	PIP_ADAPTER_INFO pAdapter = nullptr;
-	DWORD size = sizeof(computerName);
+	DWORD pcBufSize = sizeof(computerName);
 	DWORD userNameSize = sizeof(userName);
 	int ret = 0;
-	GetComputerNameA(computerName, &size);
+	GetComputerNameA(computerName, &pcBufSize);
 	GetUserNameA(userName, &userNameSize);
 
 	PIP_ADAPTER_INFO pAdapterInfo = (PIP_ADAPTER_INFO)malloc(ulOutBufLen);
