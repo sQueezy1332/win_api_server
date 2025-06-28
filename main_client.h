@@ -44,8 +44,6 @@ private:
 };
 SmartSocket clientSocket;
 
-char computerName[MAX_COMPUTERNAME_LENGTH + 1];
-char userName[MAX_COMPUTERNAME_LENGTH + 1];
 char machineInfo[128];
 int getMachineInformation();
 void captureScreenshot();
